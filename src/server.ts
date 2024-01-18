@@ -30,6 +30,24 @@ app.post("/list", async (req, res) => {
     res.status(201).send();
 });
 
+app.delete("/list/:id", async (req, res) => {
+    const idList = Number(req.params.id);
+
+    await prisma.iten.deleteMany({
+        where: {
+            list_id: idList
+        }
+    });
+
+    await prisma.compra.delete({
+        where: {
+            id: idList
+        }
+    });
+
+    res.status(201).send();
+});
+
 app.get("/historic", async (req, res) => {
     const historics = await prisma.historic.findMany();
     res.send(historics);
@@ -50,6 +68,17 @@ app.post("/itens", async (req, res) => {
             name: name,
             amount: amount,
             price: price
+        }
+    });
+    res.status(201).send();
+});
+
+app.delete("/itens/:id", async (req, res) => {
+    const id = Number(req.params.id);
+
+    await prisma.iten.delete({
+        where: {
+            id: id
         }
     });
     res.status(201).send();
