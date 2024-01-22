@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:Zegois1324@localhost:5432/appcompras?schema=public"
 }
 
 model Compra {
