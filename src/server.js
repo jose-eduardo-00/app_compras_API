@@ -19,7 +19,7 @@ const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: "https://app-compras-api.onrender.com/list",
+    origin: "*",
     methods: "GET, OPTIONS, PUT, POST, DELETE"
 }));
 app.get("/list", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
