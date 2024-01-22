@@ -5,6 +5,16 @@ const app = express();
 const prisma = new PrismaClient();
 
 app.use(express.json());
+app.use((req, res, next) => {
+    res.setHeader(
+        "Access-Control-Allow-Origin",
+        "http://localhost:5173/"
+    );
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS,CONNECT,TRACE"
+    );
+});
 
 app.get("/list", async (req, res) => {
     const lists = await prisma.compra.findMany();
