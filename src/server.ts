@@ -6,7 +6,10 @@ const app = express();
 const prisma = new PrismaClient();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: "GET, OPTIONS, PUT, POST, DELETE"
+}));
 
 app.get("/list", async (req, res) => {
     const lists = await prisma.compra.findMany();
