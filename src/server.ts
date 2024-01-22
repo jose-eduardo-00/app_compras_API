@@ -1,27 +1,15 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import cors from "cors";
 
 const app = express();
 const prisma = new PrismaClient();
 
 app.use(express.json());
-app.use((req, res, next) => {
-    res.setHeader(
-        "Access-Control-Allow-Origin",
-        "http://localhost:5173/"
-    );
-    res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS,CONNECT,TRACE"
-    );
-    res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization, X-Content-Type-Options, Accept, X-Requested-With, Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
-    );
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Private-Network", "true");
-    next();
-});
+app.use(cors({
+    origin: "http://localhost:5173/",
+    methods: "GET, OPTIONS, PUT, POST, DELETE"
+}));
 
 app.get("/list", async (req, res) => {
     const lists = await prisma.compra.findMany();
