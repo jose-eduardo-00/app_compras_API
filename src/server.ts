@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 app.use(express.json());
 app.use(cors({
-    origin: "*",
+    origin: "https://app-compras-api.onrender.com/list",
     methods: "GET, OPTIONS, PUT, POST, DELETE"
 }));
 
