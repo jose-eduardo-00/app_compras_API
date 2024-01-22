@@ -16,7 +16,9 @@ const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
-const prisma = new client_1.PrismaClient();
+const prisma = new client_1.PrismaClient({
+    datasources: { db: { url: process.env.DATABASE_URL } }
+});
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: "http://localhost:5173/",
