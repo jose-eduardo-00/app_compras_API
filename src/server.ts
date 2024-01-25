@@ -69,10 +69,10 @@ app.post("/itens", async (req, res) => {
 
     await prisma.iten.create({
         data: {
-            list_id: list_id,
+            list_id: Number(list_id),
             name: name,
-            amount: amount,
-            price: price
+            amount: Number(amount),
+            price: Number(price)
         }
     });
     res.status(201).send();
