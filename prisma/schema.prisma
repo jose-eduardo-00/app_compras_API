@@ -16,8 +16,9 @@ model Compra {
 }
 
 model Historic {
-  id            Int       @id @default(autoincrement())
-  creation_date DateTime? @db.Date
+  id            Int             @id @default(autoincrement())
+  creation_date DateTime?       @db.Date
+  histori_itens Histori_iten[]
 
   @@map("historic")
 }
@@ -28,7 +29,18 @@ model Iten {
   name    String?  @db.VarChar(50)
   amount  Int?
   price   Decimal? @db.Decimal
-  compras Compra? @relation(fields: [list_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  compras Compra?  @relation(fields: [list_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("itens")
+}
+
+model Histori_iten {
+  id       Int       @id @default(autoincrement())
+  list_id  Int?
+  name     String?   @db.VarChar(50)
+  amount   Int?
+  price    Decimal?  @db.Decimal
+  historic Historic? @relation(fields: [list_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("histori_itens")
 }

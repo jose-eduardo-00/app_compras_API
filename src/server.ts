@@ -75,6 +75,16 @@ app.post("/itens", async (req, res) => {
             price: Number(price)
         }
     });
+
+    await prisma.histori_iten.create({
+        data: {
+            list_id: Number(list_id),
+            name: name,
+            amount: Number(amount),
+            price: Number(price)
+        }
+    });
+
     res.status(201).send();
 });
 
@@ -87,6 +97,11 @@ app.delete("/itens/:id", async (req, res) => {
         }
     });
     res.status(201).send();
+});
+
+app.get("/historic_itens", async (req, res) => {
+    const historicItens = await prisma.histori_iten.findMany();
+    res.status(201).send(historicItens);
 });
 
 app.listen(3000, () => {
