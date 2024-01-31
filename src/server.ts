@@ -96,6 +96,7 @@ app.delete("/itens/:id", async (req, res) => {
             id: id
         }
     });
+
     res.status(201).send();
 });
 
