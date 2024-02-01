@@ -17,20 +17,32 @@ app.get("/list", async (req, res) => {
 });
 
 app.post("/list", async (req, res) => {
-
     const { creation_date } = req.body;
 
-    await prisma.compra.create({
-        data: {
-            creation_date: new Date(creation_date)
-        }
-    });
+    try {
+        const listWithSameDate = await prisma.compra.findFirst({
+            where: { creation_date: { equals: new Date(creation_date) } },
+        });
 
-    await prisma.historic.create({
-        data: {
-            creation_date: new Date(creation_date)
+        if (listWithSameDate) {
+            return res.status(409).send({ message: "Já existe uma lista de compras criada nessa data" });
         }
-    });
+
+        await prisma.compra.create({
+            data: {
+                creation_date: new Date(creation_date)
+            }
+        });
+
+        await prisma.historic.create({
+            data: {
+                creation_date: new Date(creation_date)
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).send({ message: "Falha ao criar a lista" });
+    }
 
     res.status(201).send();
 });
@@ -38,19 +50,29 @@ app.post("/list", async (req, res) => {
 app.delete("/list/:id", async (req, res) => {
     const idList = Number(req.params.id);
 
-    await prisma.iten.deleteMany({
-        where: {
-            list_id: idList
-        }
-    });
+    try {
+        const list = await prisma.compra.findUnique({ where: { id: idList } });
 
-    await prisma.compra.delete({
-        where: {
-            id: idList
+        if (!list) {
+            return res.status(404).send({ message: "A lista não foi encontrada" });
         }
-    });
 
-    res.status(201).send();
+        await prisma.iten.deleteMany({
+            where: {
+                list_id: idList
+            }
+        });
+
+        await prisma.compra.delete({
+            where: {
+                id: idList
+            }
+        });
+    } catch (error) {
+        res.status(500).send({ message: "Não foi possível remover a lista" });
+    }
+
+    res.status(200).send();
 });
 
 app.get("/historic", async (req, res) => {
@@ -64,26 +86,38 @@ app.get("/itens", async (req, res) => {
 });
 
 app.post("/itens", async (req, res) => {
-
     const { list_id, name, amount, price } = req.body;
 
-    await prisma.iten.create({
-        data: {
-            list_id: Number(list_id),
-            name: name,
-            amount: Number(amount),
-            price: Number(price)
-        }
-    });
+    try {
+        const itenWithSameName = await prisma.iten.findFirst({
+            where: { name: { equals: name, mode: "insensitive" } },
+        });
 
-    await prisma.histori_iten.create({
-        data: {
-            list_id: Number(list_id),
-            name: name,
-            amount: Number(amount),
-            price: Number(price)
+        if (itenWithSameName) {
+            return res.status(409).send({ message: "Já existe um item com esse nome cadastrado" });
         }
-    });
+
+        await prisma.iten.create({
+            data: {
+                list_id: Number(list_id),
+                name: name,
+                amount: Number(amount),
+                price: Number(price)
+            }
+        });
+
+        await prisma.histori_iten.create({
+            data: {
+                list_id: Number(list_id),
+                name: name,
+                amount: Number(amount),
+                price: Number(price)
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).send({ message: "Falha ao cadastrar item" });
+    }
 
     res.status(201).send();
 });
@@ -91,13 +125,25 @@ app.post("/itens", async (req, res) => {
 app.delete("/itens/:id", async (req, res) => {
     const id = Number(req.params.id);
 
-    await prisma.iten.delete({
-        where: {
-            id: id
-        }
-    });
+    try {
+        const iten = await prisma.iten.findUnique({ where: { id: id } });
 
-    res.status(201).send();
+        if (!iten) {
+            return res.status(404).send({ message: "O item não foi encontrado" });
+        }
+
+        await prisma.iten.delete({
+            where: {
+                id: id
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).send({ message: "Não foi possível remover o item" });
+    }
+
+
+    res.status(200).send();
 });
 
 app.get("/historic_itens", async (req, res) => {
