@@ -135,6 +135,6 @@ app.get("/historic_itens", (req, res) => __awaiter(void 0, void 0, void 0, funct
     const historicItens = yield prisma.histori_iten.findMany();
     res.status(201).send(historicItens);
 }));
-app.listen(5432, () => {
+app.listen(3000, () => {
     console.log("Servidor em execução");
 });
