@@ -16,8 +16,8 @@ model Compra {
 }
 
 model Historic {
-  id            Int             @id @default(autoincrement())
-  creation_date DateTime?       @db.Date
+  id            Int            @id @default(autoincrement())
+  creation_date DateTime?      @db.Date
   histori_itens Histori_iten[]
 
   @@map("historic")
