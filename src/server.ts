@@ -151,6 +151,6 @@ app.get("/historic_itens", async (req, res) => {
     res.status(201).send(historicItens);
 });
 
-app.listen(3000, () => {
+app.listen(5432, () => {
     console.log("Servidor em execução");
 });
